@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       # 親クラスのApplicationContollerのinclude SessionsHelperのlog_inメソッドを使った
       log_in user
-      # userページに飛ぶ
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
       redirect_to user
     else
       flash.now[:danger] = 'Invalid email/password combination'
@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    log_out
+    log_out if logged_in?
     redirect_to root_url
   end
 end
